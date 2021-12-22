@@ -380,6 +380,19 @@ JNIEXPORT jint JNICALL Java_org_libsodium_jni_SodiumJNI_crypto_1scalarmult(JNIEn
   return (jint)result;
 }
 
+JNIEXPORT jint JNICALL Java_org_libsodium_jni_SodiumJNI_crypto_1generichash_1bytes(JNIEnv *jenv, jclass jcls) {
+  return (jint)crypto_generichash_BYTES;
+}
+
+JNIEXPORT jint JNICALL Java_org_libsodium_jni_SodiumJNI_crypto_1generichash(JNIEnv *jenv, jclass jcls, jbyteArray j_q, jbyteArray j_n) {
+  unsigned char *q = (unsigned char *) (*jenv)->GetByteArrayElements(jenv, j_q, 0);
+  unsigned char *n = (unsigned char *) (*jenv)->GetByteArrayElements(jenv, j_n, 0);  
+  int result = (int)crypto_generichash(q, (*jenv)->GetArrayLength(jenv, j_q), n, (*jenv)->GetArrayLength(jenv, j_n), NULL, 0);
+  (*jenv)->ReleaseByteArrayElements(jenv, j_q, (jbyte *) q, 0);
+  (*jenv)->ReleaseByteArrayElements(jenv, j_n, (jbyte *) n, 0);
+  return (jint)result;
+}
+
 /* *****************************************************************************
  * Public-key cryptography - signatures
  * *****************************************************************************

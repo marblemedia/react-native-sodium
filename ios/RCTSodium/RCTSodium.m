@@ -388,6 +388,16 @@ RCT_EXPORT_METHOD(crypto_scalarmult:(NSString*)n p:(NSString*)p resolve:(RCTProm
     resolve([[NSData dataWithBytesNoCopy:q length:sizeof(q) freeWhenDone:NO] base64EncodedStringWithOptions:0]);
 }
 
+RCT_EXPORT_METHOD(crypto_generichash:(NSString*)m resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+{
+  const NSData *dm = [[NSData alloc] initWithBase64EncodedString:m options:0];
+  unsigned char q[crypto_generichash_BYTES];
+  if (crypto_generichash(q, sizeof(q), [dm bytes], dm.length, NULL, 0) != 0)
+    reject(ESODIUM,ERR_FAILURE, nil);
+  else
+    resolve([[NSData dataWithBytesNoCopy:q length:sizeof(q) freeWhenDone:NO] base64EncodedStringWithOptions:0]);
+}
+
 // *****************************************************************************
 // * Public-key cryptography - signatures
 // *****************************************************************************

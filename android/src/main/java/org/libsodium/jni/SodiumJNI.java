@@ -60,6 +60,9 @@ public class SodiumJNI {
   public final static native int crypto_scalarmult_base(byte[] q, final byte[] n);
   public final static native int crypto_scalarmult(byte[] q, final byte[] n, final byte[] p);
 
+  public final static native int crypto_generichash_bytes();
+  public final static native int crypto_generichash(byte[] q, final byte[] m);
+
   public final static native int crypto_sign_publickeybytes();
   public final static native int crypto_sign_secretkeybytes();
   public final static native int crypto_sign_seedbytes();

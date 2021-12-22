@@ -515,6 +515,22 @@ public class RCTSodiumModule extends ReactContextBaseJavaModule {
     }
   }
 
+  @ReactMethod
+  public void crypto_generichash(final String m, final Promise p) {
+    try {
+      byte[] mb = Base64.decode(m, Base64.NO_WRAP);
+      byte[] q = new byte[Sodium.crypto_generichash_bytes()];
+      int result = Sodium.crypto_generichash(q, mb);
+      if (result != 0)
+        p.reject(ESODIUM,ERR_FAILURE);
+      else
+        p.resolve(Base64.encodeToString(q,Base64.NO_WRAP));
+    }
+    catch (Throwable t) {
+      p.reject(ESODIUM,ERR_FAILURE,t);
+    }
+  }
+
   // ***************************************************************************
   // * Public-key cryptography - signatures
   // ***************************************************************************

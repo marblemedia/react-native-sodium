@@ -350,4 +350,26 @@ declare module 'react-native-sodium' {
     export const crypto_pwhash_ALG_ARGON2ID13: number;
 
     export function crypto_generichash(message: string): Promise<string>;
+
+    export const crypto_generichash_BYTES: number;
+
+    export function crypto_aead_xchacha20poly1305_ietf_encrypt(
+        plaintext: string,
+        nonce: string,
+        key: string,
+        assocData: string,
+    ): Promise<string>;
+
+    export function crypto_aead_xchacha20poly1305_ietf_decrypt(
+        ciphertext: string,
+        nonce: string,
+        key: string,
+        assocData: string,
+    ): Promise<string>;
+
+    export const crypto_aead_xchacha20poly1305_ietf_NPUBBYTES: number;
+
+    export const crypto_aead_xchacha20poly1305_ietf_KEYBYTES: number;
+
+    export const crypto_aead_xchacha20poly1305_ietf_ABYTES: number;
 }

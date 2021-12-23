@@ -17,6 +17,13 @@ public class SodiumJNI {
   public final static native int crypto_secretbox_easy(byte[] c, final byte[] m, final long mlen, final byte[] n, final byte[] k);
   public final static native int crypto_secretbox_open_easy(byte[] m, final byte[] c, final long clen,  final byte[] n, final byte[] k);
 
+  public final static native int crypto_aead_xchacha20poly1305_ietf_NPUBBYTES();
+  public final static native int crypto_aead_xchacha20poly1305_ietf_KEYBYTES();
+  public final static native int crypto_aead_xchacha20poly1305_ietf_ABYTES();
+  public final static native int crypto_aead_xchacha20poly1305_ietf_encrypt(byte[] c, final byte[] m, final long mlen, final byte[] n, final byte[] k, final byte[] a, final long alen);
+  public final static native int crypto_aead_xchacha20poly1305_ietf_decrypt(byte[] m, final byte[] c, final long clen,  final byte[] n, final byte[] k, final byte[] a, final long alen);
+
+
   public final static native int crypto_auth_keybytes();
   public final static native int crypto_auth_bytes();
   public final static native void crypto_auth_keygen(byte[] key);

@@ -82,6 +82,9 @@ public class RCTSodiumModule extends ReactContextBaseJavaModule {
      constants.put("crypto_pwhash_ALG_ARGON2ID13", Sodium.crypto_pwhash_algo_argon2id13());
      constants.put("crypto_scalarmult_BYTES", Sodium.crypto_scalarmult_bytes());
      constants.put("crypto_scalarmult_SCALARBYTES", Sodium.crypto_scalarmult_scalarbytes());
+     constants.put("crypto_aead_xchacha20poly1305_ietf_NPUBBYTES", Sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES());
+     constants.put("crypto_aead_xchacha20poly1305_ietf_KEYBYTES", Sodium.crypto_aead_xchacha20poly1305_ietf_KEYBYTES());
+     constants.put("crypto_aead_xchacha20poly1305_ietf_ABYTES", Sodium.crypto_aead_xchacha20poly1305_ietf_ABYTES());
 
      return constants;
   }
@@ -189,6 +192,58 @@ public class RCTSodiumModule extends ReactContextBaseJavaModule {
       else {
         byte[] mb = new byte[cb.length - Sodium.crypto_secretbox_macbytes()];
         int result = Sodium.crypto_secretbox_open_easy(mb, cb, cb.length, nb, kb);
+        if (result != 0)
+          p.reject(ESODIUM,ERR_FAILURE);
+        else
+          p.resolve(Base64.encodeToString(mb,Base64.NO_WRAP));
+      }
+    }
+    catch (Throwable t) {
+      p.reject(ESODIUM,ERR_FAILURE,t);
+    }
+  }
+
+  @ReactMethod
+  public void crypto_aead_xchacha20poly1305_ietf_encrypt(final String m, final String n, final String k, final String a, final Promise p) {
+    try {
+      byte[] mb = Base64.decode(m, Base64.NO_WRAP);
+      byte[] nb = Base64.decode(n, Base64.NO_WRAP);
+      byte[] kb = Base64.decode(k, Base64.NO_WRAP);
+      byte[] ab = Base64.decode(a, Base64.NO_WRAP);
+      if (kb.length != Sodium.crypto_aead_xchacha20poly1305_ietf_KEYBYTES())
+        p.reject(ESODIUM,ERR_BAD_KEY);
+      else if (nb.length != Sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES())
+        p.reject(ESODIUM,ERR_BAD_NONCE);
+      else {
+        byte[] cb = new byte[mb.length + Sodium.crypto_aead_xchacha20poly1305_ietf_ABYTES()];
+        int result = Sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(cb, mb, mb.length, nb, kb, ab, ab.length);
+        if (result != 0)
+          p.reject(ESODIUM,ERR_FAILURE);
+        else
+          p.resolve(Base64.encodeToString(cb,Base64.NO_WRAP));
+      }
+    }
+    catch (Throwable t) {
+      p.reject(ESODIUM,ERR_FAILURE,t);
+    }
+  }
+
+    @ReactMethod
+  public void crypto_aead_xchacha20poly1305_ietf_decrypt(final String c, final String n, final String k, final String a, final Promise p) {
+    try {
+      byte[] cb = Base64.decode(c, Base64.NO_WRAP);
+      byte[] nb = Base64.decode(n, Base64.NO_WRAP);
+      byte[] kb = Base64.decode(k, Base64.NO_WRAP);
+      byte[] ab = Base64.decode(a, Base64.NO_WRAP);
+      if (kb.length != Sodium.crypto_aead_xchacha20poly1305_ietf_KEYBYTES())
+        p.reject(ESODIUM,ERR_BAD_KEY);
+      else if (nb.length != Sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES())
+        p.reject(ESODIUM,ERR_BAD_NONCE);
+      else if (cb.length <= Sodium.crypto_aead_xchacha20poly1305_ietf_ABYTES())
+        p.reject(ESODIUM,ERR_BAD_MSG);
+      else {
+        byte[] mb = new byte[cb.length - Sodium.crypto_aead_xchacha20poly1305_ietf_ABYTES()];
+        int result = Sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(mb, cb, cb.length, nb, kb, ab, ab.length);
         if (result != 0)
           p.reject(ESODIUM,ERR_FAILURE);
         else

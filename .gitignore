@@ -6,6 +6,7 @@
 android/build
 android/.externalNativeBuild
 android/lib
+android/.cxx
 *.iml
 .idea
 .gradle
